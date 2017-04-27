@@ -1,0 +1,74 @@
+package io.sarl.demos.fireworks
+
+import io.sarl.core.Behaviors
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.ExternalContextAccess
+import io.sarl.core.Initialize
+import io.sarl.core.InnerContextAccess
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import io.sarl.core.MemberLeft
+import io.sarl.demos.fireworks.Exit
+import io.sarl.demos.fireworks.Freeze
+import io.sarl.demos.fireworks.Launch
+import io.sarl.demos.fireworks.Positions
+import io.sarl.demos.fireworks.Rocket
+import io.sarl.demos.fireworks.RocketReady
+
+agent RocketLauncher {
+	
+	uses Logging, Behaviors, DefaultContextInteractions, InnerContextAccess, Lifecycle, ExternalContextAccess
+	
+	var x: Double
+	var y: Double
+	var fireQuantity : Integer
+	var gravity : Double
+	var grid: Positions
+	var exited = false
+	
+	on Exit [!hasMemberAgent] {
+		emit(new Exit)
+		killMe
+	}
+	
+	on Exit [hasMemberAgent && !exited] {
+		exited = true
+		innerContext.defaultSpace.emit(new Exit)
+	}
+
+	on Initialize [!occurrence.parameters.empty] {
+		x = occurrence.parameters.get(0) as Double
+		y = occurrence.parameters.get(1) as Double
+		fireQuantity = occurrence.parameters.get(2) as Integer
+		gravity = occurrence.parameters.get(3) as Double
+		grid = occurrence.parameters.get(4) as Positions
+		
+		info("New rocket launcher created")
+	}
+	
+	on Initialize [occurrence.parameters.empty]{
+		x = 0.0
+		y = 0.0
+		fireQuantity = 30
+		gravity = 0.5
+		grid = null
+
+		info("New rocket launcher created")
+		emit(new RocketReady)
+	}
+	
+	on Launch {
+		var vx = Math.random() * 2.0
+		var vy = Math.random() * 5.5 + 2.0
+		spawnInContext(Rocket, getInnerContext, x, y, vx, vy, gravity, fireQuantity, grid)
+	}
+	
+	on Freeze[!isFromMe(occurrence)] {
+		innerContext.defaultSpace.emit(occurrence)
+	}
+	
+	on MemberLeft [!isFromMe(occurrence) && !exited]{
+		wake(new Launch)
+	}
+	
+}
