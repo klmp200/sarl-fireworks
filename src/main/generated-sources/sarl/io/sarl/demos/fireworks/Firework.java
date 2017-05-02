@@ -2,13 +2,13 @@ package io.sarl.demos.fireworks;
 
 import io.janusproject.Boot;
 import io.janusproject.kernel.Kernel;
-import io.sarl.demos.fireworks.FXMLViewerController;
-import io.sarl.demos.fireworks.LaunchingArea;
+import io.sarl.demos.fireworks.agents.LaunchingArea;
+import io.sarl.demos.fireworks.gui.FXMLViewerController;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
-@SarlSpecification("0.5")
+@SarlSpecification("0.6")
 @SuppressWarnings("all")
 public class Firework {
   public static Kernel main(final FXMLViewerController controller) {
