@@ -1,0 +1,192 @@
+package io.sarl.demos.fireworks.gui;
+
+import java.util.UUID;
+
+import io.sarl.demos.fireworks.Firework;
+import io.sarl.demos.fireworks.Positions;
+import io.sarl.demos.fireworks.events.CreateArea;
+import io.sarl.demos.fireworks.events.Exit;
+import io.sarl.demos.fireworks.events.Freeze;
+import io.sarl.demos.fireworks.events.SetupSettings;
+import io.sarl.lang.core.Event;
+import io.sarl.lang.core.EventListener;
+import io.sarl.util.OpenEventSpace;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.^event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
+import javafx.util.Duration;
+
+class FXMLViewerController implements EventListener {
+
+	private var ^space : OpenEventSpace;
+	private val id : UUID = UUID.randomUUID();
+
+	private var launched : boolean = false;
+	private var areaCreated : boolean = false;
+
+	@FXML
+	private var draw_zone : Canvas;
+
+	@FXML
+	private var gravity_display : Label;
+	@FXML
+	private var rocket_quantity_display : Label;
+	@FXML
+	private var fire_quantity_display : Label;
+
+	@FXML
+	private var gravity_input : ScrollBar;
+	@FXML
+	private var rocket_quantity_input : ScrollBar;
+	@FXML
+	private var fire_quantity_input : ScrollBar;
+
+	@FXML 
+	private var setup_button : Button;
+	@FXML 
+	private var launch_button : Button;
+	@FXML 
+	private var stop_button : Button;
+
+	public def cleanExit() {
+		if (this.^space !== null)
+			this.^space.emit(new Exit());
+	}
+
+	public def setGUISpace(ispace : OpenEventSpace) {
+		this.^space = ispace;
+		this.^space.register(this);
+	}
+
+	public def getGravity() : double {
+		return gravity_input.getValue();
+	}
+
+	public def getRocketQuantity() : int {
+		return rocket_quantity_input.getValue() as int;
+	}
+
+	public def getFireQuantity() : int {
+		return fire_quantity_input.getValue() as int;
+	}
+
+	public def listenAndDraw(grid : Positions) {
+		var gc : GraphicsContext = draw_zone.getGraphicsContext2D();
+		var wait : PauseTransition = new PauseTransition(Duration.seconds(0.03));
+
+		wait.setOnFinished [ e |
+			try {
+				gc.clearRect(0, 0, draw_zone.getWidth(), draw_zone.getHeight());
+				grid.getRockets().values().stream().filter(rocket|!rocket.getHidden()).forEach(rocket |
+					{
+					gc.setFill(rocket.getColor());
+					gc.fillOval(rocket.getPosition().get(0), rocket.getPosition().get(1), 10, 10);
+					});
+
+				grid.getFire().values().forEach(fire |
+					{
+					gc.setFill(fire.getColor());
+					fire.getPositions().forEach(pos |
+						{
+						gc.fillOval(pos.get(0), pos.get(1), 5, 5);
+						});
+					});
+			} catch (exception : Exception) {
+			}
+			wait.playFromStart();
+		];
+		wait.play();
+	}
+
+	@FXML
+	public def exitApplication(ievent : ActionEvent) {
+		^space.emit(new Exit());
+		Platform.exit();
+	}
+
+	@FXML protected def actionSetup() {
+		var ^event : SetupSettings = new SetupSettings(this.getRocketQuantity(), this.getFireQuantity(),
+			this.getGravity(), this.draw_zone.getWidth());
+		if (!launched) {
+			launch_button.setDisable(false);
+			Firework.main(this);
+			launched = true;
+			areaCreated = false;
+		}
+		this.^space.emit(^event);
+	}
+
+	@FXML
+	protected def actionLaunch() {
+		launch_button.setDisable(true);
+		stop_button.setDisable(false);
+		setup_button.setDisable(true);
+		if (!areaCreated) {
+			this.^space.emit(new CreateArea());
+			this.areaCreated = true;
+		} else {
+			this.^space.emit(new Freeze(false));
+		}
+	}
+
+	@FXML
+	protected def actionStop() {
+		stop_button.setDisable(true);
+		launch_button.setDisable(false);
+		setup_button.setDisable(false);
+		this.^space.emit(new Freeze(true));
+	}
+
+	@FXML
+	protected def actionGravityDisplay() {
+		gravity_input.valueProperty().addListener(new ChangeListener<Number>() {
+			public def changed(ov : ObservableValue<? extends Number>, old_val : Number, new_val : Number) {
+				gravity_display.setText(String.format("%.1f", gravity_input.getValue()));
+			}
+		});
+	}
+
+	@FXML
+	protected def actionRocketQuantityDisplay() {
+		rocket_quantity_input.valueProperty().addListener(new ChangeListener<Number>() {
+			public def changed(ov : ObservableValue<? extends Number>, old_val : Number, new_val : Number) {
+				rocket_quantity_display.setText(String.format("%.0f", rocket_quantity_input.getValue()));
+			}
+		});
+
+	}
+
+	@FXML
+	protected def actionFireQuantityDisplay() {
+		fire_quantity_input.valueProperty().addListener(new ChangeListener<Number>() {
+			public def changed(ov : ObservableValue<? extends Number>, old_val : Number, new_val : Number) {
+				fire_quantity_display.setText(String.format("%.0f", fire_quantity_input.getValue()));
+			}
+		});
+
+	}
+
+	@Override
+	public def getID() : UUID {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
+
+	@Override
+	public def receiveEvent(^event : Event) {
+		/* 
+		 * if (event instanceof TestEvent){
+		 * System.out.println("Guy recieved an event " + ((TestEvent) event).message);
+		 * this.space.emit(new TestEventHack());
+		 * }
+		 */
+	}
+}
