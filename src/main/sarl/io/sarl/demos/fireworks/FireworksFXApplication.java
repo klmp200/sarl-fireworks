@@ -2,6 +2,7 @@ package io.sarl.demos.fireworks;
 
 import java.net.URL;
 
+import io.sarl.demos.fireworks.gui.FXMLViewerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -9,13 +10,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Viewer extends Application {
+public class FireworksFXApplication extends Application {
 	
 	private FXMLLoader loader;
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		URL location = getClass().getResource("viewer.fxml");
+		URL location = getClass().getResource("FireworksFXApplication.fxml");
 		loader = new FXMLLoader();
 		loader.setLocation(location);
 		loader.setBuilderFactory(new JavaFXBuilderFactory());

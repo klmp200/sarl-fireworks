@@ -1,14 +1,16 @@
-package io.sarl.demos.fireworks
+package io.sarl.demos.fireworks.agents
 
 import io.sarl.core.AgentTask
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions
-import io.sarl.core.ExternalContextAccess
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.Schedules
-import io.sarl.core.Time
+import io.sarl.demos.fireworks.events.Exit
+import io.sarl.demos.fireworks.events.FireReady
+import io.sarl.demos.fireworks.events.Freeze
+import io.sarl.demos.fireworks.events.UpdateFirePosition
 import io.sarl.util.Scopes
 import java.util.ArrayList
 import java.util.List
@@ -16,7 +18,7 @@ import java.util.UUID
 import java.util.Vector
 
 agent Fire { 
-	uses Lifecycle, Logging, Behaviors, DefaultContextInteractions, ExternalContextAccess, Schedules, Time
+	uses Lifecycle, Logging, Behaviors, DefaultContextInteractions, Schedules
 	
 	var x: List<Double>
 	var y: List<Double>

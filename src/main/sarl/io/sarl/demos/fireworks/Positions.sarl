@@ -1,4 +1,4 @@
-package io.sarl.demos.fireworks
+package io.sarl.demos.fireworks.agents
 
 import java.util.HashMap
 import java.util.List

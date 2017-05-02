@@ -1,7 +1,13 @@
-package io.sarl.demos.fireworks;
+package io.sarl.demos.fireworks.gui;
 
 import java.util.UUID;
 
+import io.sarl.demos.fireworks.Firework;
+import io.sarl.demos.fireworks.agents.Positions;
+import io.sarl.demos.fireworks.events.CreateArea;
+import io.sarl.demos.fireworks.events.Exit;
+import io.sarl.demos.fireworks.events.Freeze;
+import io.sarl.demos.fireworks.events.SetupSettings;
 import io.sarl.lang.core.Event;
 import io.sarl.lang.core.EventListener;
 import io.sarl.util.OpenEventSpace;

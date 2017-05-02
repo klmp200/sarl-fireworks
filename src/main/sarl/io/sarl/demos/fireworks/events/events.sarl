@@ -1,0 +1,49 @@
+package io.sarl.demos.fireworks.events
+
+event Launch
+
+event CreateArea
+
+event Explode
+
+event KillRocket
+
+event KillFire
+
+event RocketReady
+
+event UpdateRocketPosition
+
+event UpdateFirePosition
+
+event FireReady
+
+event SprayFire
+
+event Exit
+
+event SetupSettings {
+	var rocketsQuantity : Integer
+	var fireQuatity : Integer
+	var gravity : Double
+	var maxWidth : Double
+
+	new(rq : Integer, fq : Integer, grav : Double, max : Double) {
+		rocketsQuantity = rq
+		fireQuatity = fq
+		gravity = grav
+		maxWidth = max
+	}
+}
+
+
+event Freeze {
+	var value : boolean
+
+	new (value : boolean) {
+		this.value = value
+	}
+}
+
+
+

@@ -1,40 +1,10 @@
 package io.sarl.demos.fireworks
 
 import io.janusproject.Boot
+import io.sarl.demos.fireworks.agents.LaunchingArea
+import io.sarl.demos.fireworks.gui.FXMLViewerController
 
 import static io.janusproject.Boot.*
-
-event Launch
-event CreateArea
-event Explode
-event KillRocket
-event KillFire
-event RocketReady
-event UpdateRocketPosition
-event UpdateFirePosition
-event FireReady
-event SprayFire
-event Exit
-
-event Freeze {
-	var value: boolean
-	new (value: boolean){
-		this.value = value
-	}
-}
-
-event SetupSettings {
-	var rocketsQuantity: Integer
-	var fireQuatity: Integer
-	var gravity: Double
-	var maxWidth: Double
-	new(rq: Integer, fq: Integer, grav: Double, max: Double){
-		rocketsQuantity = rq
-		fireQuatity = fq
-		gravity = grav
-		maxWidth = max
-	}
-}
 
 class Firework {
 	static def main(controller: FXMLViewerController) {
