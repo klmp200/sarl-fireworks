@@ -47,7 +47,7 @@ agent Rocket {
 		exploded = true
 		frozen = true
 		exited = true
-		cancel(move, true)
+		move.cancel(true)
 
 		innerContext.defaultSpace.emit(new Exit)
 	}
@@ -55,7 +55,7 @@ agent Rocket {
 	on Freeze {
 		this.frozen = occurrence.value
 		if (frozen)
-			cancel(move, true)
+			move.cancel(true)
 		if (!frozen)
 			wake(new UpdateRocketPosition)
 	}
@@ -98,7 +98,7 @@ agent Rocket {
 			grid.setRocketPosition(id, vect)
 		if (lifetime <= 0) {
 			exploded = true
-			cancel(move, true)
+			move.cancel(true)
 			grid.hideHocketPosition(id)
 			wake(new Explode)
 		}

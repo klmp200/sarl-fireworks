@@ -9,6 +9,7 @@ import javafx.scene.paint.Color
 
 class RocketsPos {
 	public val ROCKETREFRESHDELAY = 100
+	
 	var position = new Vector<Double>()
 	var color : Color
 	var hidden = false

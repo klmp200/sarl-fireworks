@@ -38,7 +38,7 @@ agent Fire {
 	on Freeze {
 		this.frozen = occurrence.value
 		if (frozen)
-			cancel(move, true)
+			move.cancel(true)
 		else
 			wake(new UpdateFirePosition)
 	}
@@ -106,7 +106,7 @@ agent Fire {
 	}
 
 	def cleanBeforeExit() {
-		cancel(move, true)
+		move.cancel(true)
 		exited = true
 		destroyed = true
 	}
