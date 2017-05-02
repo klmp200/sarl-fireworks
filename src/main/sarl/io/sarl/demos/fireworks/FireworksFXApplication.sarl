@@ -21,7 +21,7 @@ class FireworksFXApplication extends Application {
 		loader.setBuilderFactory(new JavaFXBuilderFactory());
 		var root : Parent = loader.load(location.openStream()) as Parent;
 		var scene : Scene = new Scene(root);
-		stage.setTitle("Firewoks sarl animation");
+		stage.setTitle("SARL Demo: Fireworks Animation");
 		stage.setScene(scene);
 		stage.show();
 	}

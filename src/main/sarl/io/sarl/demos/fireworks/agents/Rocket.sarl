@@ -10,6 +10,7 @@ import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import io.sarl.core.Schedules
+import io.sarl.demos.fireworks.Positions
 import io.sarl.demos.fireworks.events.Exit
 import io.sarl.demos.fireworks.events.Explode
 import io.sarl.demos.fireworks.events.FireReady

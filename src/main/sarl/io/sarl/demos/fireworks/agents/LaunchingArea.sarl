@@ -7,6 +7,7 @@ import io.sarl.core.InnerContextAccess
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
+import io.sarl.demos.fireworks.Positions
 import io.sarl.demos.fireworks.events.CreateArea
 import io.sarl.demos.fireworks.events.Exit
 import io.sarl.demos.fireworks.events.Freeze

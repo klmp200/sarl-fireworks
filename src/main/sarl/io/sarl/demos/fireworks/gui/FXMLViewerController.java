@@ -3,7 +3,7 @@ package io.sarl.demos.fireworks.gui;
 import java.util.UUID;
 
 import io.sarl.demos.fireworks.Firework;
-import io.sarl.demos.fireworks.agents.Positions;
+import io.sarl.demos.fireworks.Positions;
 import io.sarl.demos.fireworks.events.CreateArea;
 import io.sarl.demos.fireworks.events.Exit;
 import io.sarl.demos.fireworks.events.Freeze;
