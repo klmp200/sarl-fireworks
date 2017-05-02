@@ -14,21 +14,21 @@ import io.sarl.demos.fireworks.events.Launch
 import io.sarl.demos.fireworks.events.RocketReady
 
 agent RocketLauncher {
-	
+
 	uses Logging, Behaviors, DefaultContextInteractions, InnerContextAccess, Lifecycle
-	
-	var x: Double
-	var y: Double
+
+	var x : Double
+	var y : Double
 	var fireQuantity : Integer
 	var gravity : Double
-	var grid: Positions
+	var grid : Positions
 	var exited = false
-	
+
 	on Exit [!hasMemberAgent] {
 		emit(new Exit)
 		killMe
 	}
-	
+
 	on Exit [hasMemberAgent && !exited] {
 		exited = true
 		innerContext.defaultSpace.emit(new Exit)
@@ -40,11 +40,11 @@ agent RocketLauncher {
 		fireQuantity = occurrence.parameters.get(2) as Integer
 		gravity = occurrence.parameters.get(3) as Double
 		grid = occurrence.parameters.get(4) as Positions
-		
+
 		info("New rocket launcher created")
 	}
-	
-	on Initialize [occurrence.parameters.empty]{
+
+	on Initialize [occurrence.parameters.empty] {
 		x = 0.0
 		y = 0.0
 		fireQuantity = 30
@@ -54,19 +54,19 @@ agent RocketLauncher {
 		info("New rocket launcher created")
 		emit(new RocketReady)
 	}
-	
+
 	on Launch {
 		var vx = Math.random() * 2.0
 		var vy = Math.random() * 5.5 + 2.0
 		spawnInContext(Rocket, getInnerContext, x, y, vx, vy, gravity, fireQuantity, grid)
 	}
-	
-	on Freeze[!isFromMe(occurrence)] {
+
+	on Freeze [!isFromMe(occurrence)] {
 		innerContext.defaultSpace.emit(occurrence)
 	}
-	
-	on MemberLeft [!isFromMe(occurrence) && !exited]{
+
+	on MemberLeft [!isFromMe(occurrence) && !exited] {
 		wake(new Launch)
 	}
-	
+
 }

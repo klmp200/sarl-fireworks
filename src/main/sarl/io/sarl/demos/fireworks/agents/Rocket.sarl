@@ -21,8 +21,9 @@ import java.util.UUID
 import java.util.Vector
 
 agent Rocket {
-	
+
 	uses Lifecycle, Logging, Schedules, Behaviors, DefaultContextInteractions, InnerContextAccess
+
 	var x : Double
 	var y : Double
 	var gravity : Double
@@ -31,26 +32,26 @@ agent Rocket {
 	var fireQuantity : Integer
 	var lifetime : Integer
 	var frozen = false
-	var exploded = false 
+	var exploded = false
 	var exited = false
-	var grid: Positions
-	var id: UUID
-	var move: AgentTask
-	
-	on Exit [!hasMemberAgent]{
+	var grid : Positions
+	var id : UUID
+	var move : AgentTask
+
+	on Exit [!hasMemberAgent] {
 		emit(new Exit)
 		killMe
 	}
-	
-	on Exit [hasMemberAgent && !exited]{
+
+	on Exit [hasMemberAgent && !exited] {
 		exploded = true
 		frozen = true
 		exited = true
 		cancel(move, true)
-		
+
 		innerContext.defaultSpace.emit(new Exit)
 	}
-	
+
 	on Freeze {
 		this.frozen = occurrence.value
 		if (frozen)
@@ -58,11 +59,11 @@ agent Rocket {
 		if (!frozen)
 			wake(new UpdateRocketPosition)
 	}
-	
+
 	on Initialize {
 		info("New rocket launched")
 		var rnd = new Random()
-		if (occurrence.parameters.size.equals(7)){
+		if (occurrence.parameters.size.equals(7)) {
 			x = occurrence.parameters.get(0) as Double
 			y = occurrence.parameters.get(1) as Double
 			speedx = occurrence.parameters.get(2) as Double
@@ -75,12 +76,16 @@ agent Rocket {
 		}
 		lifetime = rnd.nextInt(5) * 300 + 300
 		id = UUID.randomUUID
-		
-		move = atFixedDelay(30)[try{ 
-			wake(new UpdateRocketPosition);}
-			catch(e: Exception) {e.printStackTrace}]
+
+		move = atFixedDelay(30) [
+			try {
+				wake(new UpdateRocketPosition);
+			} catch (e : Exception) {
+				e.printStackTrace
+			}
+		]
 	}
-	
+
 	on UpdateRocketPosition [isFromMe(occurrence) && !frozen && !exploded] {
 		var vect = new Vector(2)
 		x = x + speedx
@@ -89,32 +94,32 @@ agent Rocket {
 		vect.add(x)
 		vect.add(y)
 		lifetime = lifetime - 10
-		if (grid!==null)
+		if (grid !== null)
 			grid.setRocketPosition(id, vect)
-		if (lifetime <= 0){
+		if (lifetime <= 0) {
 			exploded = true
 			cancel(move, true)
 			grid.hideHocketPosition(id)
 			wake(new Explode)
 		}
 	}
-	
+
 	on Explode {
-		for (var i=0; i < fireQuantity; i++){
+		for (var i = 0; i < fireQuantity; i++) {
 			spawnInContext(Fire, innerContext, x, y, grid, id)
 		}
-//		emit(new Launch)
+		// emit(new Launch)
 	}
 
 	on MemberLeft [!isFromMe(occurrence) && !frozen && !hasMemberAgent] {
 		exited = true
 		grid.removeRocketPosition(id)
-//		emit(new Launch)
+		// emit(new Launch)
 		killMe
 	}
-	
-	on MemberJoined [!isFromMe(occurrence) && hasMemberAgent && memberAgentCount == fireQuantity]{
+
+	on MemberJoined [!isFromMe(occurrence) && hasMemberAgent && memberAgentCount == fireQuantity] {
 		innerContext.defaultSpace.emit(new FireReady)
 	}
-	
+
 }

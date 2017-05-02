@@ -23,29 +23,26 @@ import javafx.util.Duration
 
 class FXMLViewerController implements EventListener {
 
-	private var ispace : OpenEventSpace;
 	private val id : UUID = UUID.randomUUID();
 
+	private var ispace : OpenEventSpace;
 	private var launched : boolean = false;
 	private var areaCreated : boolean = false;
 
 	@FXML
 	private var draw_zone : Canvas;
-
 	@FXML
 	private var gravity_display : Label;
 	@FXML
 	private var rocket_quantity_display : Label;
 	@FXML
 	private var fire_quantity_display : Label;
-
 	@FXML
 	private var gravity_input : ScrollBar;
 	@FXML
 	private var rocket_quantity_input : ScrollBar;
 	@FXML
 	private var fire_quantity_input : ScrollBar;
-
 	@FXML
 	private var setup_button : Button;
 	@FXML

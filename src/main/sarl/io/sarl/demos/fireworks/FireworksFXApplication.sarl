@@ -14,8 +14,8 @@ class FireworksFXApplication extends Application {
 	private var loader : FXMLLoader
 
 	@Override
-	public def start(stage: Stage) throws Exception {
-		var location : URL  = getClass().getResource("FireworksFXApplication.fxml");
+	public def start(stage : Stage) throws Exception {
+		var location : URL = getClass().getResource("FireworksFXApplication.fxml");
 		loader = new FXMLLoader();
 		loader.setLocation(location);
 		loader.setBuilderFactory(new JavaFXBuilderFactory());
@@ -26,14 +26,14 @@ class FireworksFXApplication extends Application {
 		stage.show();
 	}
 
-	public static def main(args: String[]) {
+	public static def main(args : String[]) {
 		launch(args);
 	}
 
 	@Override
-	public def stop() throws Exception {		
+	public def stop() throws Exception {
 		super.stop();
 		(loader.getController() as FXMLViewerController).cleanExit();
 	}
-	
+
 }

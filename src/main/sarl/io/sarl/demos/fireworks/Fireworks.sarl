@@ -7,7 +7,7 @@ import io.sarl.demos.fireworks.gui.FXMLViewerController
 import static io.janusproject.Boot.*
 
 class Firework {
-	static def main(controller: FXMLViewerController) {
+	static def main(controller : FXMLViewerController) {
 		Boot::offline = true
 		Boot::startJanus(typeof(LaunchingArea), controller)
 	}

@@ -18,23 +18,23 @@ import java.util.List
 import java.util.UUID
 import java.util.Vector
 
-agent Fire { 
+agent Fire {
 	uses Lifecycle, Logging, Behaviors, DefaultContextInteractions, Schedules
-	
-	var x: List<Double>
-	var y: List<Double>
+
+	var x : List<Double>
+	var y : List<Double>
 	var lifetime = 300
 	var frozen = false
 	var destroyed = false
 	var exited = false
-	var grid: Positions
-	var xf: Double
-	var yf: Double
+	var grid : Positions
+	var xf : Double
+	var yf : Double
 	var id = UUID.randomUUID
-	var parentID: UUID
-	var move: AgentTask
-	var parentAgent: UUID
-	
+	var parentID : UUID
+	var move : AgentTask
+	var parentAgent : UUID
+
 	on Freeze {
 		this.frozen = occurrence.value
 		if (frozen)
@@ -42,11 +42,11 @@ agent Fire {
 		else
 			wake(new UpdateFirePosition)
 	}
-	
+
 	on Initialize {
 		x = new ArrayList()
 		y = new ArrayList()
-		if (occurrence.parameters.size.equals(4)){
+		if (occurrence.parameters.size.equals(4)) {
 			x.add(occurrence.parameters.get(0) as Double)
 			y.add(occurrence.parameters.get(1) as Double)
 			grid = occurrence.parameters.get(2) as Positions
@@ -55,60 +55,67 @@ agent Fire {
 			info("Error in fire Initialize : bad parameter number")
 		}
 		parentAgent = occurrence.spawner
-		
+
 		xf = Math.random() * 10.0 - Math.random() * 5
 		yf = Math.random() * 10.0 + 1.0
 
+	}
 
-	}
-	
 	on FireReady {
-		move = atFixedDelay(30)[try{ 
-			wake(new UpdateFirePosition);}
-			catch(e: Exception) {e.printStackTrace}]
+		move = atFixedDelay(30) [
+			try {
+				wake(new UpdateFirePosition);
+			} catch (e : Exception) {
+				e.printStackTrace
+			}
+		]
 	}
-	
-	on UpdateFirePosition [isFromMe(occurrence) && !frozen && !destroyed]{
+
+	on UpdateFirePosition [isFromMe(occurrence) && !frozen && !destroyed] {
 		var newx = x.last + xf
 		var newy = y.last + yf
 		x.add(newx)
 		y.add(newy)
-		
-		if (grid !== null){
+
+		if (grid !== null) {
 			var list = new ArrayList<Vector<Double>>
-			x.forEach[pos | {
-				var nvect = new Vector(2)
-				nvect.add(pos)
-				list.add(nvect)
-			}]
-			y.forEach[pos, i | {
-				var nvect = list.get(i)
-				nvect.add(pos)
-				list.set(i, nvect)
-			}]
+			x.forEach [pos |
+				{
+					var nvect = new Vector(2)
+					nvect.add(pos)
+					list.add(nvect)
+				}
+			]
+			y.forEach [pos, i |
+				{
+					var nvect = list.get(i)
+					nvect.add(pos)
+					list.set(i, nvect)
+				}
+			]
 			grid.setFirePosition(id, parentID, list)
 		}
-		
+
 		lifetime = lifetime - 10
-		
-		if (lifetime <= 0){
+
+		if (lifetime <= 0) {
 			grid.removeFirePosition(id)
 			this.cleanBeforeExit
 			in(1000)[killMe]
 		}
 	}
-	
-	def cleanBeforeExit(){
+
+	def cleanBeforeExit() {
 		cancel(move, true)
 		exited = true
 		destroyed = true
 	}
-	
+
 	on Exit [!exited && isFrom(getParentID)] {
 		frozen = true
 		this.cleanBeforeExit
 		emit(new Exit, Scopes.addresses(defaultSpace.getAddress(parentAgent)))
 		killMe
 	}
-	
+
 }

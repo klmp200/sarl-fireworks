@@ -21,68 +21,68 @@ import java.util.UUID
 agent LaunchingArea {
 	uses DefaultContextInteractions, Lifecycle, Behaviors, Logging, InnerContextAccess
 
-	var rocketsQuantity: Integer
-	var fireQuantity: Integer
-	var gravity: Double
-	var grid: Positions = new Positions
+	var rocketsQuantity : Integer
+	var fireQuantity : Integer
+	var gravity : Double
+	var grid : Positions = new Positions
 	var maxWidth = 10.0
 	var exited = false
-	
+
 	on SetupSettings {
 		this.rocketsQuantity = occurrence.rocketsQuantity
 		this.fireQuantity = occurrence.fireQuatity
 		this.gravity = occurrence.gravity
 		this.maxWidth = occurrence.maxWidth
 	}
-	
-	on Exit [!hasMemberAgent]{
+
+	on Exit [!hasMemberAgent] {
 		killMe
 	}
-	
+
 	on Exit [hasMemberAgent && !exited] {
 		exited = true
 		innerContext.defaultSpace.emit(new Exit)
 	}
-	
-	on Initialize [ occurrence.parameters.empty ] {
+
+	on Initialize [occurrence.parameters.empty] {
 		rocketsQuantity = 20
 		fireQuantity = 30
 		gravity = 0.5
-		
+
 		info("Setup Area")
-		
+
 	}
-	
-	on Initialize [ !occurrence.parameters.empty ]{
+
+	on Initialize [!occurrence.parameters.empty] {
 		var ctrl = occurrence.parameters.get(0) as FXMLViewerController
 		var ^space = defaultContext.createSpace(OpenEventSpaceSpecification, UUID.randomUUID)
 		ctrl.setGUISpace(^space)
 		^space.register(asEventListener)
-		
+
 		ctrl.listenAndDraw(grid)
-		
+
 		info("Setup Area")
 
 	}
-	
+
 	on CreateArea {
-		var x: Double
-		var i=0
+		var x : Double
+		var i = 0
 		var rnd = new Random()
-		while (i<rocketsQuantity){
+		while (i < rocketsQuantity) {
 			x = rnd.nextDouble() * maxWidth
 			spawnInContext(RocketLauncher, getInnerContext, x, 0.0, fireQuantity, gravity, grid)
 			i++;
 		}
 	}
-	
-	on Freeze[!isFromMe(occurrence)] {
+
+	on Freeze [!isFromMe(occurrence)] {
 		innerContext.defaultSpace.emit(occurrence)
 	}
 
-	on MemberJoined [ occurrence.inInnerDefaultSpace && memberAgentCount == rocketsQuantity]{
+	on MemberJoined [occurrence.inInnerDefaultSpace && memberAgentCount == rocketsQuantity] {
 		info("Area Ready")
 		innerContext.defaultSpace.emit(new Launch)
 	}
-	
+
 }
