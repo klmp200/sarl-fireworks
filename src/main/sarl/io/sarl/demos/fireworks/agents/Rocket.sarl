@@ -10,6 +10,7 @@ import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import io.sarl.core.Schedules
+import io.sarl.demos.fireworks.Configuration
 import io.sarl.demos.fireworks.Positions
 import io.sarl.demos.fireworks.events.Exit
 import io.sarl.demos.fireworks.events.Explode
@@ -77,7 +78,7 @@ agent Rocket {
 		lifetime = rnd.nextInt(5) * 300 + 300
 		id = UUID.randomUUID
 
-		move = atFixedDelay(30) [
+		move = atFixedDelay(Configuration.RocketLifeCycleSchedulingRate) [
 			try {
 				wake(new UpdateRocketPosition);
 			} catch (e : Exception) {

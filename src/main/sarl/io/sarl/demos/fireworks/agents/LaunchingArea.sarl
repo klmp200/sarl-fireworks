@@ -55,13 +55,13 @@ agent LaunchingArea {
 
 	on Initialize [!occurrence.parameters.empty] {
 		var ctrl = occurrence.parameters.get(0) as FXMLViewerController
-		var ^space = defaultContext.createSpace(OpenEventSpaceSpecification, UUID.randomUUID)
-		ctrl.setGUISpace(^space)
-		^space.register(asEventListener)
+		var ispace = defaultContext.createSpace(OpenEventSpaceSpecification, UUID.randomUUID)
+		ctrl.setGUISpace(ispace)
+		ispace.register(asEventListener)
 
 		ctrl.listenAndDraw(grid)
 
-		info("Setup Area")
+		info("Finishing initialization of Launching Area")
 
 	}
 
@@ -81,7 +81,7 @@ agent LaunchingArea {
 	}
 
 	on MemberJoined [occurrence.inInnerDefaultSpace && memberAgentCount == rocketsQuantity] {
-		info("Area Ready")
+		info("Area is Ready: All rockets are here")
 		innerContext.defaultSpace.emit(new Launch)
 	}
 

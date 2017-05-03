@@ -7,6 +7,7 @@ import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
 import io.sarl.core.Schedules
+import io.sarl.demos.fireworks.Configuration
 import io.sarl.demos.fireworks.Positions
 import io.sarl.demos.fireworks.events.Exit
 import io.sarl.demos.fireworks.events.FireReady
@@ -62,7 +63,7 @@ agent Fire {
 	}
 
 	on FireReady {
-		move = atFixedDelay(30) [
+		move = atFixedDelay(Configuration.FireLifeCycleSchedulingRate) [
 			try {
 				wake(new UpdateFirePosition);
 			} catch (e : Exception) {

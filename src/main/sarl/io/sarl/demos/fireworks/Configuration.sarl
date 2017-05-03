@@ -1,0 +1,14 @@
+package io.sarl.demos.fireworks
+
+
+public class Configuration {
+	
+	/**
+	 * Delay in miillisecond
+	 */
+	public static val RocketLifeCycleSchedulingRate : long = 30
+
+	public static val FireLifeCycleSchedulingRate : long = 30
+	
+	
+}
