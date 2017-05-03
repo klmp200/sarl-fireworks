@@ -9,6 +9,7 @@ import static io.janusproject.Boot.*
 class Firework {
 	static def main(controller : FXMLViewerController) {
 		Boot::offline = true
+		Boot::verboseLevel = 7
 		Boot::startJanus(typeof(LaunchingArea), controller)
 	}
 }
