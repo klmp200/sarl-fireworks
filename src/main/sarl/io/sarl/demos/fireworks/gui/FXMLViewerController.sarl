@@ -114,6 +114,10 @@ class FXMLViewerController implements EventListener {
 			Firework.main(this);
 			launched = true;
 			areaCreated = false;
+			gravity_input.setDisable(true)
+			fire_quantity_input.setDisable(true)
+			rocket_quantity_input.setDisable(true)
+			setup_button.setDisable(true)
 		}
 		this.ispace.emit(ievent);
 	}

@@ -2,6 +2,7 @@ package io.sarl.demos.fireworks
 
 import io.sarl.demos.fireworks.gui.FXMLViewerController
 import java.net.URL
+import java.util.ResourceBundle
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.fxml.JavaFXBuilderFactory
@@ -12,6 +13,9 @@ import javafx.stage.Stage
 class FireworksFXApplication extends Application {
 
 	private var loader : FXMLLoader
+	
+	private val bundle : ResourceBundle = ResourceBundle.getBundle(
+		FireworksFXApplication.getPackage.name.replaceAll("\\.", "/") + "/" + FireworksFXApplication.simpleName);
 
 	@Override
 	public def start(stage : Stage) throws Exception {
@@ -19,10 +23,11 @@ class FireworksFXApplication extends Application {
 		loader = new FXMLLoader();
 		loader.setLocation(location);
 		loader.setBuilderFactory(new JavaFXBuilderFactory());
+		loader.resources = bundle
 		var root : Parent = loader.load(location.openStream()) as Parent;
 		var scene : Scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("ViewerController.css").toExternalForm);
-		stage.setTitle("SARL Demo: Fireworks Animation");
+		stage.setTitle(bundle.getString("TITLE"))
 		stage.setScene(scene);
 		stage.show();
 	}
