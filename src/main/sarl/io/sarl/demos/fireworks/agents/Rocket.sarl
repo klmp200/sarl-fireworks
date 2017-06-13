@@ -107,7 +107,7 @@ agent Rocket {
 
 	on Explode {
 		for (var i = 0; i < fireQuantity; i++) {
-			spawnInContext(Fire, innerContext, x, y, grid, id)
+			spawnInContext(Fire, innerContext, x, y, grid, id, gravity)
 		}
 		// emit(new Launch)
 	}

@@ -31,10 +31,14 @@ agent Fire {
 	var grid : Positions
 	var xf : Double
 	var yf : Double
+	var vx : Double
+	var vy : Double
 	var id = UUID.randomUUID
 	var parentID : UUID
 	var move : AgentTask
 	var parentAgent : UUID
+	var gravity: Double
+	var mass : Double
 
 	on Freeze {
 		this.frozen = occurrence.value
@@ -47,11 +51,12 @@ agent Fire {
 	on Initialize {
 		x = new ArrayList()
 		y = new ArrayList()
-		if (occurrence.parameters.size.equals(4)) {
+		if (occurrence.parameters.size.equals(5)) {
 			x.add(occurrence.parameters.get(0) as Double)
 			y.add(occurrence.parameters.get(1) as Double)
 			grid = occurrence.parameters.get(2) as Positions
 			parentID = occurrence.parameters.get(3) as UUID
+			gravity = occurrence.parameters.get(4) as Double
 		} else {
 			info("Error in fire Initialize : bad parameter number")
 		}
@@ -59,7 +64,11 @@ agent Fire {
 
 		xf = Math.random() * 10.0 - Math.random() * 5
 		yf = Math.random() * 10.0 + 1.0
-
+		
+		vx = xf * 20.0
+		vy = yf * 30.0
+		
+		mass = 10.0
 	}
 
 	on FireReady {
@@ -73,8 +82,14 @@ agent Fire {
 	}
 
 	on UpdateFirePosition [isFromMe(occurrence) && !frozen && !destroyed] {
-		var newx = x.last + xf
-		var newy = y.last + yf
+		var newx : Double
+		var newy : Double
+		
+		vy = vy - gravity * mass * Configuration.FireLifeCycleSchedulingRate / 100.0
+		
+		newx = x.last + vx * Configuration.FireLifeCycleSchedulingRate / 1000.0
+		newy = y.last + vy * Configuration.FireLifeCycleSchedulingRate / 1000.0
+
 		x.add(newx)
 		y.add(newy)
 

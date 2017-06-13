@@ -90,7 +90,7 @@ class FXMLViewerController implements EventListener {
 					gc.setFill(fire.getColor());
 					fire.getPositions().forEach(pos |
 						{
-						gc.fillOval(pos.get(0), pos.get(1), 5, 5);
+						gc.fillOval(pos.get(0), pos.get(1), 3, 3);
 						});
 					});
 			} catch (exception : Exception) {
