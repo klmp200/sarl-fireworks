@@ -50,28 +50,46 @@ class FXMLViewerController implements EventListener {
 	@FXML
 	private var stop_button : Button;
 
+	/*
+	 * Emit a kill signal wen the app is exited
+	 */
 	public def cleanExit() {
 		if (this.ispace !== null)
 			this.ispace.emit(new Exit());
 	}
 
+	/*
+	 * Method invoked by the sarl agent to register the object on a space
+	 */
 	public def setGUISpace(ispace : OpenEventSpace) {
 		this.ispace = ispace;
 		this.ispace.register(this);
 	}
 
+	/*
+	 * Get gravity
+	 */
 	public def getGravity() : double {
 		return gravity_input.getValue();
 	}
 
+	/*
+	 * Get Rocket Quantity
+	 */
 	public def getRocketQuantity() : int {
 		return rocket_quantity_input.getValue() as int;
 	}
 
+	/*
+	 * Get Fire Quantity
+	 */
 	public def getFireQuantity() : int {
 		return fire_quantity_input.getValue() as int;
 	}
 
+	/*
+	 * Draw every positions on main canvas
+	 */
 	public def listenAndDraw(grid : Positions) {
 		var gc : GraphicsContext = draw_zone.getGraphicsContext2D();
 		var wait : PauseTransition = new PauseTransition(Duration.seconds(0.03));
@@ -100,12 +118,18 @@ class FXMLViewerController implements EventListener {
 		wait.play();
 	}
 
+	/*
+	 * Catch exit event
+	 */
 	@FXML
 	public def exitApplication(ievent : ActionEvent) {
 		ispace.emit(new Exit());
 		Platform.exit();
 	}
 
+	/*
+	 * Create main sarl agent and do setup
+	 */
 	@FXML protected def actionSetup() {
 		var ievent : SetupSettings = new SetupSettings(this.getRocketQuantity(), this.getFireQuantity(),
 			this.getGravity(), this.draw_zone.getWidth());
@@ -122,6 +146,9 @@ class FXMLViewerController implements EventListener {
 		this.ispace.emit(ievent);
 	}
 
+	/*
+	 * Launch fireworks
+	 */
 	@FXML
 	protected def actionLaunch() {
 		launch_button.setDisable(true);
@@ -135,6 +162,9 @@ class FXMLViewerController implements EventListener {
 		}
 	}
 
+	/*
+	 * Stop fireworks
+	 */
 	@FXML
 	protected def actionStop() {
 		stop_button.setDisable(true);
@@ -143,6 +173,9 @@ class FXMLViewerController implements EventListener {
 		this.ispace.emit(new Freeze(true));
 	}
 
+	/*
+	 * Add a listener on gravity
+	 */
 	@FXML
 	protected def actionGravityDisplay() {
 		gravity_input.valueProperty().addListener [
@@ -150,6 +183,9 @@ class FXMLViewerController implements EventListener {
 		]
 	}
 
+	/*
+	 * Add a listener on rocket quantity
+	 */
 	@FXML
 	protected def actionRocketQuantityDisplay() {
 		rocket_quantity_input.valueProperty().addListener [
@@ -157,6 +193,9 @@ class FXMLViewerController implements EventListener {
 		];
 	}
 
+	/*
+	 * Add a listener on fire quantity
+	 */
 	@FXML
 	protected def actionFireQuantityDisplay() {
 		fire_quantity_input.valueProperty().addListener [
@@ -164,18 +203,18 @@ class FXMLViewerController implements EventListener {
 		]
 	}
 
+	/*
+	 * Get ID of the object on the space
+	 */
 	@Override
 	public def getID() : UUID {
 		return this.id;
 	}
 
+	/*
+	 * Needed for implementing EventListener
+	 */
 	@Override
 	public def receiveEvent(ievent : Event) {
-		/* 
-		 * if (event instanceof TestEvent){
-		 * System.out.println("Guy recieved an event " + ((TestEvent) event).message);
-		 * this.space.emit(new TestEventHack());
-		 * }
-		 */
 	}
 }

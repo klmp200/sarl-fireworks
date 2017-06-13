@@ -7,6 +7,9 @@ import java.util.UUID
 import java.util.Vector
 import javafx.scene.paint.Color
 
+/*
+ * Data structure used to represent a rocket position
+ */
 class RocketsPos {
 	public val ROCKETREFRESHDELAY = 100
 	
@@ -39,6 +42,9 @@ class RocketsPos {
 	}
 }
 
+/*
+ * Data structure used to represent a fire position
+ */
 class FirePos {
 	public val FIREREFRESHDELAY = 100
 	var positions : List<Vector<Double>>
@@ -61,6 +67,10 @@ class FirePos {
 	}
 }
 
+/*
+ * Data structure referencing every position of every fire and rocket existing
+ * This object is read by the GUI for display
+ */
 class Positions {
 	var rockets = new HashMap<UUID, RocketsPos>()
 	var fire = new HashMap<UUID, FirePos>()

@@ -13,6 +13,9 @@ import io.sarl.demos.fireworks.events.Freeze
 import io.sarl.demos.fireworks.events.Launch
 import io.sarl.demos.fireworks.events.RocketReady
 
+/*
+ * A rocket launcher that own a rocket in it's inner context
+ */
 agent RocketLauncher {
 
 	uses Logging, Behaviors, DefaultContextInteractions, InnerContextAccess, Lifecycle
@@ -24,16 +27,25 @@ agent RocketLauncher {
 	var grid : Positions
 	var exited = false
 
+	/*
+	 * Kill itself after an Exit signal
+	 */
 	on Exit [!hasMemberAgent] {
 		emit(new Exit)
 		killMe
 	}
 
+	/*
+	 * Transmit an Exit signal to inner context
+	 */
 	on Exit [hasMemberAgent && !exited] {
 		exited = true
 		innerContext.defaultSpace.emit(new Exit)
 	}
 
+	/*
+	 * Initialization step invoked with parameters
+	 */
 	on Initialize [!occurrence.parameters.empty] {
 		x = occurrence.parameters.get(0) as Double
 		y = occurrence.parameters.get(1) as Double
@@ -44,6 +56,9 @@ agent RocketLauncher {
 		info("New rocket launcher created")
 	}
 
+	/*
+	 * Initialization step by default
+	 */
 	on Initialize [occurrence.parameters.empty] {
 		x = 0.0
 		y = 0.0
@@ -55,16 +70,25 @@ agent RocketLauncher {
 		emit(new RocketReady)
 	}
 
+	/*
+	 * Launch a new rocket after a Launch signal
+	 */
 	on Launch {
 		var vx = Math.random() * 2.0
 		var vy = Math.random() * 5.5 + 2.0
 		spawnInContext(Rocket, getInnerContext, x, y, vx, vy, gravity, fireQuantity, grid)
 	}
 
+	/*
+	 * Transmit a Freeze signal
+	 */
 	on Freeze [!isFromMe(occurrence)] {
 		innerContext.defaultSpace.emit(occurrence)
 	}
 
+	/*
+	 * Launch a new rocket when the previous is destroyed
+	 */
 	on MemberLeft [!isFromMe(occurrence) && !exited] {
 		wake(new Launch)
 	}

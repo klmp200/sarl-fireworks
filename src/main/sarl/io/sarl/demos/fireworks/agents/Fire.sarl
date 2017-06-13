@@ -19,6 +19,9 @@ import java.util.List
 import java.util.UUID
 import java.util.Vector
 
+/*
+ * Fire agent moving with a nice trajectory
+ */
 agent Fire {
 	uses Lifecycle, Logging, Behaviors, DefaultContextInteractions, Schedules
 
@@ -38,8 +41,10 @@ agent Fire {
 	var move : AgentTask
 	var parentAgent : UUID
 	var gravity: Double
-	var mass : Double
 
+	/*
+	 * Freeze itself
+	 */
 	on Freeze {
 		this.frozen = occurrence.value
 		if (frozen)
@@ -48,6 +53,9 @@ agent Fire {
 			wake(new UpdateFirePosition)
 	}
 
+	/*
+	 * Initialization step
+	 */
 	on Initialize {
 		x = new ArrayList()
 		y = new ArrayList()
@@ -68,9 +76,11 @@ agent Fire {
 		vx = xf * 20.0
 		vy = yf * 30.0
 		
-		mass = 10.0
 	}
 
+	/*
+	 * Trigger fixed delay for waking UpdateFirePosition
+	 */
 	on FireReady {
 		move = atFixedDelay(Configuration.FireLifeCycleSchedulingRate) [
 			try {
@@ -81,11 +91,14 @@ agent Fire {
 		]
 	}
 
+	/*
+	 * Update position every time it's triggered by itself
+	 */
 	on UpdateFirePosition [isFromMe(occurrence) && !frozen && !destroyed] {
 		var newx : Double
 		var newy : Double
 		
-		vy = vy - gravity * mass * Configuration.FireLifeCycleSchedulingRate / 100.0
+		vy = vy - gravity * Configuration.FireLifeCycleSchedulingRate / 10.0
 		
 		newx = x.last + vx * Configuration.FireLifeCycleSchedulingRate / 1000.0
 		newy = y.last + vy * Configuration.FireLifeCycleSchedulingRate / 1000.0
@@ -121,12 +134,18 @@ agent Fire {
 		}
 	}
 
+	/*
+	 * Clean every task
+	 */
 	def cleanBeforeExit() {
 		move.cancel(true)
 		exited = true
 		destroyed = true
 	}
 
+	/*
+	 * Kill itself when Exit signal invoked from parent
+	 */
 	on Exit [!exited && isFrom(getParentID)] {
 		frozen = true
 		this.cleanBeforeExit

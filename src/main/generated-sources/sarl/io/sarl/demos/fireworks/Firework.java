@@ -9,6 +9,9 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
+/**
+ * Launch janus Kernel and main sarl agent
+ */
 @SarlSpecification("0.5")
 @SarlElementType(8)
 @SuppressWarnings("all")

@@ -1,27 +1,63 @@
 package io.sarl.demos.fireworks.events
 
+/*
+ * Trigger the launching area for starting the demo
+ */
 event Launch
 
+/*
+ * Setup the Area
+ */
 event CreateArea
 
+/*
+ * Make a rocket explode
+ */
 event Explode
 
+/*
+ * Ask a rocket to kill itself
+ */
 event KillRocket
 
+/*
+ * Ask a fire to kill itself
+ */
 event KillFire
 
+/*
+ * Say that a rocket is ready
+ */
 event RocketReady
 
+/*
+ * Trigger a rocket to update it's position
+ */
 event UpdateRocketPosition
 
+/*
+ * Trigger a fire to update it's position
+ */
 event UpdateFirePosition
 
+/*
+ * Say that a fire is ready
+ */
 event FireReady
 
+/*
+ * Makes a fire spray everywhere
+ */
 event SprayFire
 
+/*
+ * Triggered when the app need to be exited
+ */
 event Exit
 
+/*
+ * Carry all setup informations, send by the GUI
+ */
 event SetupSettings {
 	var rocketsQuantity : Integer
 	var fireQuatity : Integer
@@ -36,6 +72,9 @@ event SetupSettings {
 	}
 }
 
+/*
+ * Freeze signal send by the GUI
+ */
 event Freeze {
 	var value : boolean
 

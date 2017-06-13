@@ -21,6 +21,9 @@ import java.util.Random
 import java.util.UUID
 import java.util.Vector
 
+/*
+ * A Rocket that contains fire particles
+ */
 agent Rocket {
 
 	uses Lifecycle, Logging, Schedules, Behaviors, DefaultContextInteractions, InnerContextAccess
@@ -39,11 +42,17 @@ agent Rocket {
 	var id : UUID
 	var move : AgentTask
 
+	/*
+	 * Kill itself after an Exit signal
+	 */
 	on Exit [!hasMemberAgent] {
 		emit(new Exit)
 		killMe
 	}
 
+	/*
+	 * Transmit an Exit signal to inner context
+	 */
 	on Exit [hasMemberAgent && !exited] {
 		exploded = true
 		frozen = true
@@ -53,6 +62,9 @@ agent Rocket {
 		innerContext.defaultSpace.emit(new Exit)
 	}
 
+	/*
+	 * Freeze itself
+	 */
 	on Freeze {
 		this.frozen = occurrence.value
 		if (frozen)
@@ -61,6 +73,9 @@ agent Rocket {
 			wake(new UpdateRocketPosition)
 	}
 
+	/*
+	 * Initialization step
+	 */
 	on Initialize {
 		info("New rocket launched")
 		var rnd = new Random()
@@ -78,6 +93,7 @@ agent Rocket {
 		lifetime = rnd.nextInt(5) * 300 + 300
 		id = UUID.randomUUID
 
+		// Create a background task to update its own position
 		move = atFixedDelay(Configuration.RocketLifeCycleSchedulingRate) [
 			try {
 				wake(new UpdateRocketPosition);
@@ -87,6 +103,9 @@ agent Rocket {
 		]
 	}
 
+	/*
+	 * Update its position at every UpdateRocketPosition event from itself
+	 */
 	on UpdateRocketPosition [isFromMe(occurrence) && !frozen && !exploded] {
 		var vect = new Vector(2)
 		x = x + speedx
@@ -105,6 +124,9 @@ agent Rocket {
 		}
 	}
 
+	/*
+	 * Explode and generate fire
+	 */
 	on Explode {
 		for (var i = 0; i < fireQuantity; i++) {
 			spawnInContext(Fire, innerContext, x, y, grid, id, gravity)
@@ -112,6 +134,9 @@ agent Rocket {
 		// emit(new Launch)
 	}
 
+	/*
+	 * Kill itself when all its inner agents are killed
+	 */
 	on MemberLeft [!isFromMe(occurrence) && !frozen && !hasMemberAgent] {
 		exited = true
 		grid.removeRocketPosition(id)
@@ -119,6 +144,9 @@ agent Rocket {
 		killMe
 	}
 
+	/*
+	 * Emit a FireReady signal when all fire are created
+	 */
 	on MemberJoined [!isFromMe(occurrence) && hasMemberAgent && memberAgentCount == fireQuantity] {
 		innerContext.defaultSpace.emit(new FireReady)
 	}
