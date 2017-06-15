@@ -169,7 +169,6 @@ class FXMLViewerController implements EventListener {
 	protected def actionStop() {
 		stop_button.setDisable(true);
 		launch_button.setDisable(false);
-		setup_button.setDisable(false);
 		this.ispace.emit(new Freeze(true));
 	}
 

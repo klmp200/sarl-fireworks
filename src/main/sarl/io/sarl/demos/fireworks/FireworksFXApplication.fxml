@@ -25,14 +25,14 @@
                <tooltip>
                   <Tooltip text="%GravityTooltip" />
                </tooltip></ScrollBar>
-            <Label fx:id="gravity_display" layoutX="113.0" layoutY="17.0" prefHeight="17.0" prefWidth="46.0" text="0,5" />
+            <Label fx:id="gravity_display" layoutX="135.0" layoutY="17.0" prefHeight="17.0" prefWidth="46.0" text="0,5" textAlignment="RIGHT" />
             <Label layoutY="17.0" prefHeight="17.0" prefWidth="46.0" text="%GravityLabelText" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="27.0" layoutY="255.0">
          <children>
             <Label layoutX="4.0" layoutY="17.0" text="%FireQuantityLabelText" />
-            <Label fx:id="fire_quantity_display" layoutX="117.0" layoutY="17.0" prefHeight="17.0" prefWidth="46.0" text="30" />
+            <Label fx:id="fire_quantity_display" layoutX="135.0" layoutY="17.0" prefHeight="17.0" prefWidth="46.0" text="30" textAlignment="RIGHT" />
             <ScrollBar fx:id="fire_quantity_input" layoutX="4.0" max="50.0" min="5.0" onMouseEntered="#actionFireQuantityDisplay" prefHeight="17.0" prefWidth="159.0" value="30.0">
                <tooltip>
                   <Tooltip text="%FireQuantityTooltip" />
@@ -46,7 +46,7 @@
                   <Tooltip text="%RocketQuantityTooltip" />
                </tooltip></ScrollBar>
             <Label layoutY="20.0" text="%RocketQuantityLabelText" />
-            <Label fx:id="rocket_quantity_display" layoutX="113.0" layoutY="20.0" prefHeight="17.0" prefWidth="46.0" text="20" />
+            <Label fx:id="rocket_quantity_display" layoutX="135.0" layoutY="20.0" prefHeight="17.0" prefWidth="46.0" text="20" textAlignment="RIGHT" />
          </children>
       </AnchorPane>
       <Button fx:id="stop_button" disable="true" layoutX="117.0" layoutY="89.0" mnemonicParsing="false" onAction="#actionStop" text="%StopButtonText">
