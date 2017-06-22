@@ -2,7 +2,7 @@
 
 This application follows a MVC (Model-View-Controller) pattern for the GUI communication.
 
-![MVC pattern applied on this project](MVC_en.pdf)
+![MVC pattern applied on this project](MVC_en.png)
 
 
 # Fireworks demonstration
@@ -11,7 +11,7 @@ This application follows a MVC (Model-View-Controller) pattern for the GUI commu
 The goal of this demo is to bring out some fireworks using SARL agents.
 The application is composed of 4 agents. The whole structure holonic.
 
-![Agents organization in the fireworks demo](Firework_en.pdf| width=150px |height=300px)
+![Agents organization in the fireworks demo](Firework_en.png)
 
 The main agent is the *LaunchingArea* which is linked with the GUI and and contains the other agents inside its inner context.
 This agent creates the *RocketLauncher*, one by rocket asked by the user. It also transmits the gravity and other parameters.
@@ -54,7 +54,7 @@ agent LaunchingArea {
 }
 ```
 
-![Application with the GUI](firework_screenshot.png| width=350px | height=300px)
+![Application with the GUI](firework_screenshot.png)
 
 Then, each RocketLauncher creates a *Rocket*. When this one is destroyed, the *RocketLauncher* is going to generate another one. This allows to displace the verification of the existence of the *Rocket* out of the LaunchingArea. It also isolates the *Rocket* and avoid that emitted events disrupt the managing of the simulation.
 
